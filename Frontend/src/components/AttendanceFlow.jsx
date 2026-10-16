@@ -15,6 +15,7 @@ import {
   Smartphone,
   Check,
   Compass,
+  SwitchCamera,
 } from 'lucide-react';
 import { submitAttendanceProof } from '../services/api';
 
@@ -37,7 +38,8 @@ export default function AttendanceFlow({ kendraConfig }) {
   const streamRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Camera state
+  // Camera state & facing mode
+  const [facingMode, setFacingMode] = useState('environment'); // 'environment' (back) | 'user' (front/selfie)
   const [isCameraStarting, setIsCameraStarting] = useState(true);
   const [cameraError, setCameraError] = useState(null);
   const [isFlashActive, setIsFlashActive] = useState(false);
@@ -64,12 +66,14 @@ export default function AttendanceFlow({ kendraConfig }) {
     kendraConfig?.targetCoordinates?.longitude || 80.831617;
 
   // =========================================================================
-  // 1. REAR CAMERA STREAM INITIALIZATION
+  // 1. CAMERA STREAM INITIALIZATION & FLIP TOGGLE
   // =========================================================================
-  const startCameraStream = useCallback(async () => {
+  const startCameraStream = useCallback(async (modeToUse) => {
+    const targetMode = modeToUse || facingMode;
     setIsCameraStarting(true);
     setCameraError(null);
 
+    // Stop and release any active video tracks before switching
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
@@ -84,22 +88,36 @@ export default function AttendanceFlow({ kendraConfig }) {
 
       let stream;
       try {
+        // 1. Attempt exact constraint first
         stream = await navigator.mediaDevices.getUserMedia({
           video: {
-            facingMode: 'environment',
+            facingMode: { exact: targetMode },
             width: { ideal: 1920 },
             height: { ideal: 1080 },
           },
           audio: false,
         });
-      } catch (envErr) {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { ideal: 1920 },
-            height: { ideal: 1080 },
-          },
-          audio: false,
-        });
+      } catch (exactErr) {
+        try {
+          // 2. Fallback without 'exact' (for devices that reject exact constraint)
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: targetMode,
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+            },
+            audio: false,
+          });
+        } catch (modeErr) {
+          // 3. Generic fallback
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              width: { ideal: 1920 },
+              height: { ideal: 1080 },
+            },
+            audio: false,
+          });
+        }
       }
 
       streamRef.current = stream;
@@ -116,14 +134,15 @@ export default function AttendanceFlow({ kendraConfig }) {
           'कैमरा अनुमति अस्वीकृत है। कृपया ब्राउज़र सेटिंग्स में जाकर कैमरा चालू करें।';
       } else if (
         err.name === 'NotFoundError' ||
-        err.name === 'DevicesNotFoundError'
+        err.name === 'DevicesNotFoundError' ||
+        err.name === 'OverconstrainedError'
       ) {
-        errorMsg = 'कोई कैमरा डिवाइस नहीं मिला।';
+        errorMsg = 'चुना गया कैमरा उपलब्ध नहीं है। कृपया दूसरा कैमरा चुनें।';
       }
       setCameraError(errorMsg);
       setIsCameraStarting(false);
     }
-  }, []);
+  }, [facingMode]);
 
   const stopCameraStream = useCallback(() => {
     if (streamRef.current) {
@@ -134,6 +153,12 @@ export default function AttendanceFlow({ kendraConfig }) {
       videoRef.current.srcObject = null;
     }
   }, []);
+
+  const handleToggleCamera = () => {
+    if (isCameraStarting || flowState === 'capturing') return;
+    const nextMode = facingMode === 'environment' ? 'user' : 'environment';
+    setFacingMode(nextMode);
+  };
 
   // =========================================================================
   // 2. HIGH ACCURACY GPS GEO-ACQUISITION
@@ -176,13 +201,13 @@ export default function AttendanceFlow({ kendraConfig }) {
 
   useEffect(() => {
     if (flowState === 'camera') {
-      startCameraStream();
+      startCameraStream(facingMode);
       refreshGps();
     }
     return () => {
       stopCameraStream();
     };
-  }, [flowState, startCameraStream, refreshGps, stopCameraStream]);
+  }, [flowState, facingMode, startCameraStream, refreshGps, stopCameraStream]);
 
   // =========================================================================
   // 3. CAPTURE, ANTI-BLUR COMPRESSION & SUBMIT FLOW
@@ -212,6 +237,13 @@ export default function AttendanceFlow({ kendraConfig }) {
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
+
+      // When facingMode is 'user', flip context horizontally so selfie is not mirrored backwards
+      if (facingMode === 'user') {
+        ctx.translate(targetW, 0);
+        ctx.scale(-1, 1);
+      }
+
       ctx.drawImage(video, 0, 0, targetW, targetH);
 
       // Export blob at 0.82 JPEG quality for anti-blur crispness
@@ -461,6 +493,9 @@ export default function AttendanceFlow({ kendraConfig }) {
               className={`w-full h-full object-cover transition-opacity duration-300 ${
                 isCameraStarting ? 'opacity-0' : 'opacity-100'
               }`}
+              style={{
+                transform: facingMode === 'user' ? 'scaleX(-1)' : 'none',
+              }}
             />
 
             {/* Starting Indicator */}
@@ -469,7 +504,9 @@ export default function AttendanceFlow({ kendraConfig }) {
                 <RefreshCw className="w-8 h-8 text-emerald-400 animate-spin" />
                 <p className="text-sm font-bold">कैमरा चालू हो रहा है...</p>
                 <p className="text-xs text-slate-500">
-                  रियर कैमरा (1080p Anti-Blur Mode) कनेक्ट किया जा रहा है
+                  {facingMode === 'environment'
+                    ? 'रियर कैमरा (1080p Mode) कनेक्ट किया जा रहा है'
+                    : 'फ्रंट/सेल्फ़ी कैमरा कनेक्ट किया जा रहा है'}
                 </p>
               </div>
             )}
@@ -483,7 +520,7 @@ export default function AttendanceFlow({ kendraConfig }) {
                 <div className="flex items-center gap-3 pt-2">
                   <button
                     type="button"
-                    onClick={startCameraStream}
+                    onClick={() => startCameraStream(facingMode)}
                     className="clay-btn-emerald px-4 py-2 text-xs font-bold text-white flex items-center gap-1.5 cursor-pointer"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
@@ -504,18 +541,26 @@ export default function AttendanceFlow({ kendraConfig }) {
             {/* Viewfinder Target Framing Overlay */}
             {!isCameraStarting && !cameraError && (
               <div className="absolute inset-4 sm:inset-8 border border-white/20 rounded-2xl pointer-events-none flex flex-col justify-between p-3">
-                <div className="flex justify-between items-start text-[10px] sm:text-xs font-mono font-bold text-emerald-400 tracking-wider">
-                  <span className="bg-black/60 px-2 py-0.5 rounded backdrop-blur">
-                    🔴 LIVE 1080P
+                <div className="flex justify-between items-start text-[10px] sm:text-xs font-mono font-bold tracking-wider">
+                  <span className="bg-black/60 px-2 py-0.5 rounded backdrop-blur text-emerald-400">
+                    🔴 {facingMode === 'environment' ? 'REAR 1080P' : 'FRONT/SELFIE'}
                   </span>
-                  <span className="bg-black/60 px-2 py-0.5 rounded backdrop-blur">
-                    {new Date().toLocaleTimeString('en-IN', {
-                      timeZone: 'Asia/Kolkata',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                    })}
-                  </span>
+
+                  {/* Floating Flip Button inside Viewfinder */}
+                  <button
+                    type="button"
+                    disabled={isCameraStarting || flowState === 'capturing'}
+                    onClick={handleToggleCamera}
+                    className="pointer-events-auto bg-black/60 hover:bg-black/80 px-2.5 py-1 rounded-xl backdrop-blur text-white flex items-center gap-1.5 text-[11px] font-sans font-bold border border-white/20 active:scale-90 transition cursor-pointer disabled:opacity-50"
+                    aria-label="कैमरा बदलें (Flip Camera)"
+                  >
+                    <SwitchCamera
+                      className={`w-3.5 h-3.5 text-emerald-400 transition-transform duration-300 ${
+                        facingMode === 'user' ? 'rotate-180 text-indigo-400' : ''
+                      }`}
+                    />
+                    <span>कैमरा बदलें</span>
+                  </button>
                 </div>
 
                 <div className="self-center w-12 h-12 border-2 border-dashed border-emerald-400/40 rounded-full flex items-center justify-center">
@@ -523,7 +568,9 @@ export default function AttendanceFlow({ kendraConfig }) {
                 </div>
 
                 <div className="text-[11px] font-medium text-white/80 bg-black/60 px-2.5 py-1 rounded backdrop-blur self-center text-center">
-                  केंद्र बोर्ड और बच्चों/कार्यकर्ता को फ्रेम के बीच में रखें
+                  {facingMode === 'environment'
+                    ? 'केंद्र बोर्ड और बच्चों/कार्यकर्ता को फ्रेम के बीच में रखें'
+                    : 'कार्यकर्ता चेहरे को फ्रेम के मध्य में रखें'}
                 </div>
               </div>
             )}
@@ -550,18 +597,40 @@ export default function AttendanceFlow({ kendraConfig }) {
             )}
           </div>
 
-          {/* Action Bar: Big Shutter Button */}
+          {/* Action Bar: Shutter Button & Flip Camera Button */}
           <div className="flex flex-col items-center justify-center pt-2 sm:pt-4 space-y-3">
-            <button
-              type="button"
-              disabled={isCameraStarting || flowState === 'capturing'}
-              onClick={handleCaptureAndSubmit}
-              className="clay-btn-emerald w-full sm:w-auto px-8 sm:px-12 py-4 rounded-3xl flex items-center justify-center gap-3 text-base sm:text-lg font-black text-white shadow-2xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-            >
-              <div className="w-4 h-4 rounded-full bg-white animate-ping" />
-              <Camera className="w-6 h-6" />
-              <span>उपस्थिति फ़ोटो खींचें और दर्ज करें</span>
-            </button>
+            <div className="flex items-center justify-center gap-3 sm:gap-5 w-full max-w-lg">
+              {/* Shutter Button */}
+              <button
+                type="button"
+                disabled={isCameraStarting || flowState === 'capturing'}
+                onClick={handleCaptureAndSubmit}
+                className="clay-btn-emerald flex-1 py-4 px-6 sm:px-10 rounded-3xl flex items-center justify-center gap-3 text-sm sm:text-base md:text-lg font-black text-white shadow-2xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                <div className="w-3.5 h-3.5 rounded-full bg-white animate-ping" />
+                <Camera className="w-6 h-6 shrink-0" />
+                <span>उपस्थिति फ़ोटो खींचें और दर्ज करें</span>
+              </button>
+
+              {/* Dedicated Flip Camera Floating Button (Min 48px x 48px tap target) */}
+              <button
+                type="button"
+                disabled={isCameraStarting || flowState === 'capturing'}
+                onClick={handleToggleCamera}
+                className="w-14 h-14 min-w-[48px] min-h-[48px] rounded-3xl clay-card hover:clay-btn-indigo flex flex-col items-center justify-center text-slate-300 hover:text-white transition cursor-pointer active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shrink-0 ring-1 ring-white/10"
+                title={facingMode === 'environment' ? 'फ्रंट/सेल्फ़ी कैमरा चालू करें' : 'रियर कैमरा चालू करें'}
+                aria-label="कैमरा बदलें (Flip Camera)"
+              >
+                <SwitchCamera
+                  className={`w-6 h-6 transition-transform duration-300 ${
+                    facingMode === 'user' ? 'rotate-180 text-indigo-400' : 'text-slate-300'
+                  }`}
+                />
+                <span className="text-[9px] font-bold mt-0.5 leading-none text-slate-400">
+                  {facingMode === 'environment' ? 'कैमरा बदलें' : 'रियर'}
+                </span>
+              </button>
+            </div>
 
             <button
               type="button"
