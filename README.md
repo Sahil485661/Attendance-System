@@ -1,5 +1,5 @@
 # AVAPS — Anganwadi Verified Attendance Proof System
-### आंगनवाड़ी डिजिटल उपस्थिति एवं साक्ष्य प्रणाली
+
 
 [![Node.js Version](https://img.shields.io/badge/Node.js-v20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express-v5.0-000000?logo=express&logoColor=white)](https://expressjs.com/)
