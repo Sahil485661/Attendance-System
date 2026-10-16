@@ -136,7 +136,7 @@ export default function KendraSetupPage({ onConfigSaved, onGoToAttendance }) {
     setIsGpsFixing(true);
     setGpsError('');
     setGpsWarning('');
-    setGpsStatusText('उपग्रहों से संपर्क साधा जा रहा है...');
+    setGpsStatusText('सेटेलाइट से संपर्क बनाया जा रहा है...');
 
     if (!navigator.geolocation) {
       setGpsError('इस डिवाइस अथवा ब्राउज़र में GPS उपलब्ध नहीं है।');
@@ -446,7 +446,7 @@ export default function KendraSetupPage({ onConfigSaved, onGoToAttendance }) {
                       {isGpsFixing ? (
                         <>
                           <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                          <span>उपग्रह ट्रैक हो रहा है...</span>
+                          <span>जीपीएस ट्रैक हो रहा है...</span>
                         </>
                       ) : (
                         <>
@@ -577,7 +577,7 @@ export default function KendraSetupPage({ onConfigSaved, onGoToAttendance }) {
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-emerald-400" />
                   <h3 className="text-base font-extrabold text-white">
-                    सत्यापित उपस्थिति रिकॉर्ड्स ({records.length})
+                    वेरिफाइड उपस्थिति रिकॉर्ड्स ({records.length})
                   </h3>
                 </div>
 
