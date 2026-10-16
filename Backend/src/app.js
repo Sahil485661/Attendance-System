@@ -8,8 +8,10 @@ const { getISTDateTime } = require('./utils/geo.utils');
 const app = express();
 
 // CORS Configuration: Restrict strictly to CLIENT_URL and local dev
+const cleanUrl = (url) => (url ? url.trim().replace(/\/+$/, '') : '');
+
 const allowedOrigins = [
-  process.env.CLIENT_URL,
+  cleanUrl(process.env.CLIENT_URL),
   'http://localhost:5173',
   'http://localhost:3000',
 ].filter(Boolean);
@@ -17,7 +19,12 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) return callback(null, true);
+      const normalizedOrigin = cleanUrl(origin);
+      if (
+        allowedOrigins.includes(normalizedOrigin) ||
+        (process.env.CLIENT_URL && normalizedOrigin === cleanUrl(process.env.CLIENT_URL))
+      ) {
         return callback(null, true);
       }
       return callback(new Error('CORS origin denied'));

@@ -1,9 +1,13 @@
-# Dependencies
+# Build outputs & Dependencies
 node_modules/
+dist/
+dist-ssr/
+*.local
 
 # Environment files
 .env
 .env.*
+Backend/.env
 backend/.env
 
 # Logs
