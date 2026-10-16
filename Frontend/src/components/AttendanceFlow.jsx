@@ -377,7 +377,7 @@ export default function AttendanceFlow({ kendraConfig }) {
     const shareText = `Verified at Anganwadi ${targetKendraCode}${plusCodeStr} | ${istTime}${locText}`;
 
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
-      `${shareText}\n\n📷 साक्ष्य फोटो: ${imageUrl}`
+      `${shareText}\n\n📷 उपस्थिति फोटो: ${imageUrl}`
     )}`;
 
     if (
@@ -439,7 +439,7 @@ export default function AttendanceFlow({ kendraConfig }) {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full clay-pill-emerald text-emerald-300 text-xs font-black uppercase tracking-wider mb-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-                <span>दैनिक उपस्थिति साक्ष्य</span>
+                <span>दैनिक उपस्थिति</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
                 <span>{targetKendraName}</span>
@@ -569,8 +569,8 @@ export default function AttendanceFlow({ kendraConfig }) {
 
                 <div className="text-[11px] font-medium text-white/80 bg-black/60 px-2.5 py-1 rounded backdrop-blur self-center text-center">
                   {facingMode === 'environment'
-                    ? 'केंद्र बोर्ड और बच्चों/कार्यकर्ता को फ्रेम के बीच में रखें'
-                    : 'कार्यकर्ता चेहरे को फ्रेम के मध्य में रखें'}
+                    ? 'फ्रेम के बीच में रहे'
+                    : 'चेहरे को फ्रेम के मध्य में रखें'}
                 </div>
               </div>
             )}
@@ -584,7 +584,7 @@ export default function AttendanceFlow({ kendraConfig }) {
                 </div>
                 <div className="space-y-1.5">
                   <h3 className="text-base sm:text-lg font-black text-white">
-                    साक्ष्य तैयार हो रहा है...
+                    उपस्थिति दर्ज हो रही है...
                   </h3>
                   <p className="text-xs sm:text-sm text-emerald-400 font-semibold animate-pulse">
                     {progressStage}
@@ -609,7 +609,7 @@ export default function AttendanceFlow({ kendraConfig }) {
               >
                 <div className="w-3.5 h-3.5 rounded-full bg-white animate-ping" />
                 <Camera className="w-6 h-6 shrink-0" />
-                <span>उपस्थिति फ़ोटो खींचें और दर्ज करें</span>
+                <span>उपस्थिति फ़ोटो खींचें</span>
               </button>
 
               {/* Dedicated Flip Camera Floating Button (Min 48px x 48px tap target) */}
@@ -677,7 +677,7 @@ export default function AttendanceFlow({ kendraConfig }) {
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span className="font-bold flex items-center gap-1.5 text-slate-200">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>डिजिटल मुहरबंद साक्ष्य (Verified Stamped Proof)</span>
+                <span>Verified Stamped Proof</span>
               </span>
               <a
                 href={submissionResult.imageUrl}
