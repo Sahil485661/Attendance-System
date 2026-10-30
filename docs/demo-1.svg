@@ -1,0 +1,79 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="900">
+      <stop offset="0%" stop-color="#011827"/>
+      <stop offset="100%" stop-color="#020E1E"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0A1D2F"/>
+      <stop offset="100%" stop-color="#0B1828"/>
+    </linearGradient>
+    <linearGradient id="btn" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10C4A7"/>
+      <stop offset="100%" stop-color="#0DB39F"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1600" height="88" fill="url(#header)"/>
+  <rect x="16" y="10" width="60" height="60" rx="30" fill="#1DE0B8" opacity="0.16"/>
+  <circle cx="46" cy="40" r="22" fill="#1DE0B8"/>
+  <path d="M34 40L42 48L58 32" stroke="#052A2B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <text x="98" y="52" font-size="28" font-weight="700" fill="#F3FBFF" font-family="sans-serif">आंगनवाड़ी AVAPS</text>
+  <text x="430" y="52" font-size="17" fill="#9FD7D8" font-family="sans-serif">साबित प्रगति</text>
+
+  <rect x="770" y="18" width="255" height="46" rx="23" fill="#0F2035" stroke="#1EE1C7" opacity="0.9"/>
+  <text x="810" y="48" font-size="20" fill="#EAFEF9" font-family="sans-serif">दैनिक उपस्थित (Attendance)</text>
+
+  <rect x="1045" y="18" width="215" height="46" rx="23" fill="#0C1A2C" stroke="#3FE3C8" opacity="0.8"/>
+  <text x="1088" y="48" font-size="20" fill="#EAFEF9" font-family="sans-serif">प्रशासन सेटअप</text>
+
+  <rect x="1285" y="18" width="170" height="46" rx="23" fill="#0C1A2C" stroke="#1EE1C7" opacity="0.8"/>
+  <text x="1327" y="48" font-size="20" fill="#EAFEF9" font-family="sans-serif">सर्वर सक्रिय</text>
+
+  <rect x="12" y="95" width="1576" height="780" rx="28" fill="#071A2D" stroke="#1A2E43"/>
+  <rect x="30" y="110" width="1540" height="80" rx="22" fill="#0C1D2D"/>
+  <text x="660" y="165" font-size="42" font-weight="700" fill="#EAF9FF" font-family="sans-serif">Anganwadi Ward No.6B</text>
+  <rect x="1178" y="138" width="110" height="28" rx="14" fill="#0D1E2D" stroke="#2A4C62"/>
+  <text x="1203" y="157" font-size="18" fill="#D8EAF8" font-family="sans-serif">Ward No.6B</text>
+  <circle cx="1445" cy="153" r="14" fill="#0D1E2D" stroke="#3BE4CF"/>
+  <path d="M1438 153H1452M1445 146V160" stroke="#3BE4CF" stroke-width="2"/>
+
+  <rect x="280" y="220" width="1040" height="560" rx="26" fill="#0D2236" stroke="#1F2637"/>
+  <rect x="323" y="246" width="152" height="39" rx="19" fill="#09C79B" opacity="0.18"/>
+  <circle cx="346" cy="264" r="8" fill="#2CF1B6"/>
+  <text x="365" y="272" font-size="19" fill="#17E4AA" font-family="sans-serif">REAR 1080P</text>
+
+  <rect x="1190" y="246" width="145" height="39" rx="19" fill="#0C1B2B" stroke="#2E4B62"/>
+  <text x="1217" y="272" font-size="19" fill="#EAF9FF" font-family="sans-serif">कैमरा बदलें</text>
+
+  <rect x="314" y="294" width="972" height="390" rx="18" fill="#EAE7E4"/>
+  <rect x="320" y="300" width="960" height="378" rx="18" fill="#DDD9D5"/>
+  <rect x="315" y="300" width="40" height="378" fill="#C5C0BE" opacity="0.25"/>
+  <rect x="1243" y="298" width="34" height="382" fill="#C5C0BE" opacity="0.18"/>
+  <circle cx="760" cy="495" r="230" fill="#5B514E" opacity="0.8"/>
+  <path d="M620 450C660 338 920 350 980 460C1026 530 965 640 858 671C729 707 620 600 620 450Z" fill="#1D1C25"/>
+  <path d="M648 458C682 396 759 377 822 388C899 402 970 457 970 524C970 607 900 662 832 666C736 672 650 607 648 458Z" fill="#3C3636"/>
+  <path d="M720 465C752 422 807 415 842 429C898 450 916 500 916 565C916 605 885 645 845 660C794 678 712 663 671 628C638 598 646 574 666 545C686 516 697 494 720 465Z" fill="#111217"/>
+  <ellipse cx="766" cy="562" rx="140" ry="157" fill="#1D1C25"/>
+  <path d="M658 546C645 494 706 452 767 452C825 452 875 490 881 544C890 628 809 684 747 667C692 652 667 594 658 546Z" fill="#2B292C"/>
+  <path d="M711 480C739 495 785 495 816 479" stroke="#0E0E12" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="757" cy="530" r="62" fill="#D7C7BB"/>
+  <path d="M703 533C719 496 744 477 777 475C814 472 848 501 850 538C852 564 831 587 800 595C750 606 702 579 703 533Z" fill="#2E2C2F"/>
+  <path d="M692 600C721 635 775 657 854 645" stroke="#211E20" stroke-width="30" stroke-linecap="round"/>
+  <path d="M622 666C830 708 942 681 950 616C961 537 889 507 853 540" stroke="#1A191D" stroke-width="22" stroke-linecap="round"/>
+  <path d="M905 496C929 496 954 500 969 512" stroke="#111113" stroke-width="18" stroke-linecap="round"/>
+  <path d="M1005 710C1032 721 1096 712 1110 682" stroke="#171A1B" stroke-width="12" stroke-linecap="round"/>
+
+  <rect x="625" y="684" width="280" height="48" rx="14" fill="#0E1925" opacity="0.78"/>
+  <text x="705" y="716" font-size="22" fill="#E6F4FF" font-family="sans-serif">फोटो कैप्चर करें</text>
+
+  <rect x="640" y="795" width="320" height="66" rx="33" fill="url(#btn)"/>
+  <circle cx="705" cy="828" r="18" fill="#ECF7F8"/>
+  <path d="M697 828H713M705 820V836" stroke="#0D9D93" stroke-width="3" stroke-linecap="round"/>
+  <text x="736" y="836" font-size="22" font-weight="700" fill="#F7FFFE" font-family="sans-serif">उपस्थिति फोटो लें</text>
+  <rect x="970" y="795" width="96" height="66" rx="18" fill="#0E1828" stroke="#3B5268"/>
+  <path d="M1007 826L1035 804V851L1007 826Z" fill="#7FF0D6"/>
+
+</svg>
