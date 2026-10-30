@@ -19,6 +19,17 @@ The **Anganwadi Verified Attendance Proof System (AVAPS)** is a production-grade
 Designed specifically for non-technical Anganwadi workers (Karyakartis) in rural areas with low network bandwidth, AVAPS provides a **one-tap Hindi-first camera workflow** that automatically captures hardware-level GPS, calculates an authoritative server IST timestamp, fetches reverse geocoded village details, generates an offline **Google Plus Code**, and permanently burns a tamper-proof watermark into the photo before storing it in cloud storage.
 
 ---
+## 📸 Demo
+
+These screenshots highlight the core AVAPS workflow for field workers: capturing a live attendance proof and reviewing verification records.
+
+<div align="center">
+  <img src="docs/demo-1.svg" alt="AVAPS attendance capture demo" width="1000" />
+  <p><em>Figure 1: Attendance capture view with front camera preview and live verification status.</em></p>
+
+  <img src="docs/demo-2.svg" alt="AVAPS verification dashboard demo" width="1000" />
+  <p><em>Figure 2: Verification dashboard showing attendance entries and status badges.</em></p>
+</div>
 
 ## ✨ Key Features
 
